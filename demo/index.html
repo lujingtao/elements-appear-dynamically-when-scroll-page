@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>滚动页面元素动态出现-大话主席</title>
+    <link href="animate.css" rel="stylesheet" type="text/css" />
+    <link href="index.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="jquery.pack.js"></script>
+</head>
+
+<body>
+    <div id="header">头部</div>
+    <div id="banner">banner</div>
+    <!-- content S -->
+    <div id="content">
+        <!-- 区块类名column0~4 为js对应块 -->
+        <div class="column column0">
+            <div class="container">
+                <h2>区块一</h2>
+                <div id="area0-1" class="animated bounceOutDown"></div>
+                <div id="area0-2" class="animated bounceOutDown"></div>
+            </div>
+        </div>
+        <div class="column column1">
+            <div class="container">
+                <h2>区块二</h2>
+                <div id="area1-1" class="animated bounceOut"></div>
+            </div>
+        </div>
+        <div class="column column2">
+                <div class="container">
+                <h2>区块三</h2>
+                <div id="area2-1" class="animated flipOutX"></div>
+            </div>
+        </div>
+        <div class="column column3">
+            <div class="container">
+                <h2>区块四</h2>
+                <div id="area3-1" class="animated slideOutLeft"></div>
+                <div id="area3-2" class="animated slideOutRight"></div>
+            </div>
+        </div>
+    </div>
+    <!-- content E -->
+
+    <div id="footer">尾部</div>
+
+    <!-- 侧栏导航
+        带类别“.t”的为区块导航，最后一个“.t”已设定为返回顶部
+    -->
+    <ul class="sideFixed">
+        <li class="t li1"><i><s>1</s></i><span>区块一</span></li>
+        <li class="t li2"><i><s>2</s></i><span>区块二</span></li>
+        <li class="t li3"><i><s>3</s></i><span>区块三</span></li>
+        <li class="t li4"><i><s>4</s></i><span>区块四</span></li>
+        <li class="li5"><i><s>5</s></i>
+            <div class="pic"><img src="http://qr.liantu.com/api.php?w=110&m=8&text=#" /><em></em></div>
+        </li>
+        <li class="t li6"><i><s>丄</s></i><span>返回顶部</span></li>
+    </ul>
+</body>
+
+</html>
+<script type="text/javascript">
+//上下滚动事件
+(function($) {
+
+    var guide = $(".sideFixed");
+    var guideLi = $(".sideFixed .t");
+    var index = 0;
+    var page0End = false;
+    var page1End = false;
+    var page2End = false;
+    var page3End = false;
+
+
+    //屏幕滚动
+    var goToFun = function() {
+        console.log(index);
+        var top = index >= guideLi.size() - 1 ? 0 : $(".column" + index).offset().top;
+        $("html,body").stop().animate({ scrollTop: top }, 600, "swing", function() {
+            scrollFunc();
+        });
+    }
+
+    guideLi.each(function(i) { $(this).click(function() { index = guideLi.index($(this));
+            goToFun(); }) });
+
+    /* 滚轮事件 */
+    var scrollFunc = function(e) {
+        e = e || window.event;
+        //区块一
+        if ($(document).scrollTop() >= $(".column0").offset().top - 400 && !page0End) {
+            $("#area0-1").removeClass('bounceOutDown').css("visibility","visible").addClass("bounceInDown");
+            setTimeout(function() { $('#area0-2').removeClass('bounceOutDown').css("visibility","visible").addClass("bounceInDown"); }, 200);
+            page0End = true;
+        }
+        //区块二
+        if ($(document).scrollTop() >= $(".column1").offset().top - 400 && !page1End) {
+            $("#area1-1").removeClass('zoomOut').css("visibility","visible").addClass("zoomIn");
+            page1End = true;
+        }
+        //区块三
+        if ($(document).scrollTop() >= $(".column2").offset().top - 400 && !page2End) {
+            $("#area2-1").removeClass('flipOutX').css("visibility","visible").addClass("flipInX");
+            page2End = true;
+        }
+        //区块四
+        if ($(document).scrollTop() >= $(".column3").offset().top - 400 && !page3End) {
+            $("#area3-1").removeClass('slideOutLeft').css("visibility","visible").addClass("slideInLeft");
+            $("#area3-2").removeClass('slideOutRight').css("visibility","visible").addClass("slideInRight");
+            page3End = true;
+        }
+    }
+    if (document.addEventListener) { document.addEventListener('DOMMouseScroll', scrollFunc, false); }
+    window.onmousewheel = document.onmousewheel = scrollFunc;
+    scrollFunc();
+
+})(jQuery);
+</script>
